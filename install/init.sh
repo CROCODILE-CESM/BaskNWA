@@ -27,7 +27,7 @@ if [[ "$INSTALL_CROCOCAMP" -eq 1 ]]; then
     git submodule add https://github.com/CROCODILE-CESM/CrocoCamp.git "$CROCOCAMP_PATH"
     cd "$CROCOCAMP_PATH"
     git fetch --tags
-    git checkout 90b391c
+    git checkout 4b785f3
     cd "$BASK_PATH"
     # git add "$CROCOCAMP_PATH"
     # git add .gitmodules
