@@ -21,7 +21,7 @@ if [[ "$INSTALL_CROCOCAMP" -eq 1 ]]; then
     cd "$CROCOCAMP_PATH"/install
     cp envpaths.sh.template envpaths.sh
     DART_ROOT_PATH=${DART_PATH} CONDA_ENV_NAME="bask-crococamp" ./install.sh
-    cd "$BASK-PATH"
+    cd "$BASK_PATH"
     echo "CrocoCamp environment installed."
 fi
 
