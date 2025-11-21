@@ -2,6 +2,41 @@
 
 set -euo pipefail
 
+# Check for help flag
+for arg in "$@"; do
+    if [[ "$arg" == "-h" || "$arg" == "--help" ]]; then
+        cat << EOF
+Usage: ./install.sh [OPTIONS]
+
+Package Selection:
+  --cesm            Install CESM model
+  --crococamp       Install CrocoCamp diagnostics tools
+  --crocodash       Install CrocoDash model components
+  --cupid           Install CUPiD diagnostics framework
+  --dart            Install DART data assimilation system
+  --all             Install all packages
+
+Installation Options:
+  -d, --default     Use default paths for all packages (non-interactive)
+  -f, --force       Remove and reinstall selected packages if they already exist
+  -s, --ssh-github  Use SSH URLs instead of HTTPS for GitHub submodules (requires SSH key)
+  -h, --help        Display this help message
+
+Examples:
+  ./install.sh --crocodash --crococamp -d
+  ./install.sh --all --default
+  ./install.sh --cesm -d -f
+  ./install.sh --crocodash --cupid -d -s
+
+Notes:
+  - Multiple flags can be combined
+  - Without -d/--default, the script will prompt for custom paths
+  - If a package already exists, it will be skipped unless -f/--force is used
+EOF
+        exit 0
+    fi
+done
+
 ./generate_envpaths.sh "$@" # pass all flags
 ./init.sh
 source ./envpaths.sh
