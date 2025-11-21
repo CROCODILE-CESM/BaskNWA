@@ -21,7 +21,7 @@ fi
 
 if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
     if [ -d "$CROCODASH_PATH" ]; then
-        echo "CrocoDash already exists at $CROCODASH_PATH. Use --force to reinstall."
+        echo "CrocoDash already exists at $CROCODASH_PATH. Use -f or --force to reinstall."
     else
         echo "Downloading CrocoDash..."
         git submodule add "$CROCODASH_GITHUB" "$CROCODASH_PATH"
@@ -39,7 +39,7 @@ fi
 
 if [[ "$INSTALL_CROCOCAMP" -eq 1 ]]; then
     if [ -d "$CROCOCAMP_PATH" ]; then
-        echo "CrocoCamp already exists at $CROCOCAMP_PATH. Use --force to reinstall."
+        echo "CrocoCamp already exists at $CROCOCAMP_PATH. Use -f or --force to reinstall."
     else
         echo "Downloading CrocoCamp..."
         git submodule add "$CROCOCAMP_GITHUB" "$CROCOCAMP_PATH"
@@ -55,7 +55,7 @@ fi
 
 if [[ "$INSTALL_CUPID" -eq 1 ]]; then
     if [ -d "$CUPID_PATH" ]; then
-        echo "CUPiD already exists at $CUPID_PATH. Use --force to reinstall."
+        echo "CUPiD already exists at $CUPID_PATH. Use -f or --force to reinstall."
     else
         echo "Downloading CUPiD..."
         git submodule add "$CUPID_GITHUB" "$CUPID_PATH"
@@ -74,7 +74,7 @@ fi
 
 if [[ "$INSTALL_CESM" -eq 1 ]]; then
     if [ -d "$CESM_PATH" ]; then
-        echo "CESM already exists at $CESM_PATH. Use --force to reinstall."
+        echo "CESM already exists at $CESM_PATH. Use -f or --force to reinstall."
     else
         echo "Downloading CESM..."
         git submodule add -b workshop_2025 "$CESM_GITHUB" "$CESM_PATH"

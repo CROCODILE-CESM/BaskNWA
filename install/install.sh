@@ -37,9 +37,19 @@ EOF
     fi
 done
 
+# generate environmental variables
 ./generate_envpaths.sh "$@" # pass all flags
-./init.sh
+
+# clean already installed submodules
 source ./envpaths.sh
+if [[ "$FORCE" -eq 1 ]]; then
+    ./clean.sh
+fi
+
+# download submodules
+./init.sh
+
+# install submodules
 
 # CrocoDash
 if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
