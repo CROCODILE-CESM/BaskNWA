@@ -51,12 +51,16 @@ fi
 
 # install submodules
 
+# Source helper function
+source ./setup_conda_env.sh
+
 # CrocoDash
 if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
     echo "Installing CrocoDash environment..."
     ENV_NAME=$(awk -F ": " '/^name:/ {print $2}' "$CROCODASH_PATH/environment.yml")
     NEW_ENV_NAME="bask-${ENV_NAME}"
     mamba env create -f "$CROCODASH_PATH"/environment.yml --name ${NEW_ENV_NAME} --yes
+    add_env_vars_to_conda "$NEW_ENV_NAME"
     echo "CrocoDash environment installed."
 fi
 
@@ -77,10 +81,12 @@ if [[ "$INSTALL_CUPID" -eq 1 ]]; then
     ENV_NAME=$(awk -F ": " '/^name:/ {print $2}' "$CUPID_PATH"/environments/cupid-infrastructure.yml)
     NEW_ENV_NAME="bask-${ENV_NAME}"
     mamba env create -f "$CUPID_PATH"/environments/cupid-infrastructure.yml --name ${NEW_ENV_NAME} --yes
+    add_env_vars_to_conda "$NEW_ENV_NAME"
 
     ENV_NAME=$(awk -F ": " '/^name:/ {print $2}' "$CUPID_PATH"/environments/cupid-analysis.yml)
     NEW_ENV_NAME="bask-${ENV_NAME}"
     mamba env create -f "$CUPID_PATH"/environments/cupid-analysis.yml --name ${NEW_ENV_NAME} --yes
+    add_env_vars_to_conda "$NEW_ENV_NAME"
 
     echo "CUPiD environments installed."
 fi
