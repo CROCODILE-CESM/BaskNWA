@@ -17,25 +17,40 @@ cd install
 
 ### Available Flags
 
+#### Package Selection
 - `--crocodash`: Install CrocoDash model components
 - `--crococamp`: Install CrocoCamp diagnostics tools
 - `--cupid`: Install CUPiD diagnostics framework
 - `--cesm`: Install CESM model
 - `--dart`: Install DART data assimilation system
 - `--all`: Install all packages
-- `--default`: Use default paths for all packages (non-interactive)
 
-You can combine multiple flags. If no `--default` flag is provided, the script will prompt for custom paths for each package.
+#### Installation Options
+- `-d, --default`: Use default paths for all packages (non-interactive)
+- `-f, --force`: Remove and reinstall selected packages if they already exist
+- `-s, --ssh-github`: Use SSH URLs instead of HTTPS for GitHub submodules (requires SSH key setup)
 
-### Example
+You can combine multiple flags. If no `-d` or `--default` flag is provided, the script will prompt for custom paths for each package.
+
+### Examples
 
 ```bash
 # Install CrocoDash and CrocoCamp with default paths
-./install.sh --crocodash --crococamp --default
+./install.sh --crocodash --crococamp -d
 
 # Install all packages with default paths
 ./install.sh --all --default
+
+# Reinstall CESM (force reinstall if already exists)
+./install.sh --cesm -d -f
+
+# Install using SSH URLs (requires GitHub SSH key)
+./install.sh --crocodash --cupid -d -s
 ```
+
+### Behavior
+
+If a package already exists at the target path, the script will skip installation and print a message. Use the `-f` or `--force` flag to remove and reinstall existing packages.
 
 ## Subpackages
 

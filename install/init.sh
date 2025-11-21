@@ -3,6 +3,20 @@
 set -euo pipefail
 
 source ./envpaths.sh
+
+# Set GitHub URLs based on SSH_GITHUB flag
+if [[ "$SSH_GITHUB" -eq 1 ]]; then
+    CROCODASH_GITHUB="git@github.com:CROCODILE-CESM/CrocoDash.git"
+    CROCOCAMP_GITHUB="git@github.com:CROCODILE-CESM/CrocoCamp.git"
+    CUPID_GITHUB="git@github.com:NCAR/CUPiD.git"
+    CESM_GITHUB="git@github.com:CROCODILE-CESM/CESM"
+else
+    CROCODASH_GITHUB="https://github.com/CROCODILE-CESM/CrocoDash.git"
+    CROCOCAMP_GITHUB="https://github.com/CROCODILE-CESM/CrocoCamp.git"
+    CUPID_GITHUB="https://github.com/NCAR/CUPiD.git"
+    CESM_GITHUB="https://github.com/CROCODILE-CESM/CESM"
+fi
+
 #### CrocoDash
 
 if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
@@ -10,7 +24,7 @@ if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
         echo "CrocoDash already exists at $CROCODASH_PATH. Use --force to reinstall."
     else
         echo "Downloading CrocoDash..."
-        git submodule add https://github.com/CROCODILE-CESM/CrocoDash.git "$CROCODASH_PATH"
+        git submodule add "$CROCODASH_GITHUB" "$CROCODASH_PATH"
         cd "$CROCODASH_PATH"
         git fetch --tags
         git checkout v0.1.0-beta
@@ -28,7 +42,7 @@ if [[ "$INSTALL_CROCOCAMP" -eq 1 ]]; then
         echo "CrocoCamp already exists at $CROCOCAMP_PATH. Use --force to reinstall."
     else
         echo "Downloading CrocoCamp..."
-        git submodule add https://github.com/CROCODILE-CESM/CrocoCamp.git "$CROCOCAMP_PATH"
+        git submodule add "$CROCOCAMP_GITHUB" "$CROCOCAMP_PATH"
         cd "$CROCOCAMP_PATH"
         git fetch --tags
         git checkout 4b785f3
@@ -44,7 +58,7 @@ if [[ "$INSTALL_CUPID" -eq 1 ]]; then
         echo "CUPiD already exists at $CUPID_PATH. Use --force to reinstall."
     else
         echo "Downloading CUPiD..."
-        git submodule add https://github.com/NCAR/CUPiD.git "$CUPID_PATH"
+        git submodule add "$CUPID_GITHUB" "$CUPID_PATH"
         cd "$CUPID_PATH"
         git fetch --tags
         git checkout v0.3.1
@@ -63,7 +77,7 @@ if [[ "$INSTALL_CESM" -eq 1 ]]; then
         echo "CESM already exists at $CESM_PATH. Use --force to reinstall."
     else
         echo "Downloading CESM..."
-        git submodule add -b workshop_2025 https://github.com/CROCODILE-CESM/CESM "$CESM_PATH"
+        git submodule add -b workshop_2025 "$CESM_GITHUB" "$CESM_PATH"
         cd "$CESM_PATH"
         git pull
         git submodule update --init
