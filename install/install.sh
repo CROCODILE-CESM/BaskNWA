@@ -95,6 +95,6 @@ fi
 if [[ "$INSTALL_CESM" -eq 1 ]]; then
     echo "Installing CESM..."
     cd "$CESM_PATH"
-    ./bin/git-fleximod update
+    ./bin/git-fleximod update --path "$CESM_PATH"
     echo "CESM installed."
 fi

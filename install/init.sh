@@ -80,7 +80,6 @@ if [[ "$INSTALL_CESM" -eq 1 ]]; then
         git submodule add -b workshop_2025 "$CESM_GITHUB" "$CESM_PATH"
         cd "$CESM_PATH"
         git pull
-        git submodule update --init
         echo "CESM downloaded."
     fi
 fi
