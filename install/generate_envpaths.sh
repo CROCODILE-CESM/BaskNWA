@@ -25,21 +25,22 @@ SSH_GITHUB=0
 
 # Register what packages need to be installed from CLI flags
 for arg in "$@"; do
-    case "$arg" in
-        --cesm) CESM=1 ;;
-        --crococamp) CROCOCAMP=1 ;;
-        --crocodash) CROCODASH=1 ;;
-        --cupid) CUPID=1 ;;
-        --dart) DART=1 ;;
-        --all)
-            for PKG in "${!PKG_PATHS[@]}"; do
-                declare "${PKG}=1"
-            done
-            ;;
-        -d|--default) DEFAULT=1 ;;
-        -f|--force) FORCE=1 ;;
-        -s|--ssh-github) SSH_GITHUB=1 ;;
-    esac
+    upper="${arg#--}"
+    upper="${upper^^}"
+    if [[ -v PKG_PATHS[$upper] ]]; then
+        declare "${upper}=1"
+    else
+        case "$arg" in
+            --all)
+                for PKG in "${!PKG_PATHS[@]}"; do
+                    declare "${PKG}=1"
+                done
+                ;;
+            -d|--default) DEFAULT=1 ;;
+            -f|--force) FORCE=1 ;;
+            -s|--ssh-github) SSH_GITHUB=1 ;;
+        esac
+    fi
 done
 
 # Assign paths
