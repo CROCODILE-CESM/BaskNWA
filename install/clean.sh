@@ -10,11 +10,11 @@ echo "Cleaning selected components..."
 rel() { echo "${1#$BASK_PATH/}"; }
 
 # CrocoDash
-if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
+if [[ "$INSTALL_CROCODASH" -eq 1 ]] && [ -d "$CROCODASH_PATH" ]; then
     echo "Removing CrocoDash..."
     cd "$BASK_PATH"
-    git submodule deinit -f "$(rel "$CROCODASH_PATH")" 2>/dev/null || true
-    git rm -rf --cached "$(rel "$CROCODASH_PATH")" 2>/dev/null || true
+    git submodule deinit -f "$CROCODASH_PATH" 2>/dev/null || true
+    git rm -f "$CROCODASH_PATH" 2>/dev/null || true
     rm -rf "$CROCODASH_PATH"
     rm -rf ".git/modules/$(rel "$CROCODASH_PATH")" 2>/dev/null || true
     git config -f .gitmodules --remove-section "submodule.$(rel "$CROCODASH_PATH")" 2>/dev/null || true
@@ -22,11 +22,11 @@ if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
 fi
 
 # model2obs
-if [[ "$INSTALL_MODEL2OBS" -eq 1 ]]; then
+if [[ "$INSTALL_MODEL2OBS" -eq 1 ]] && [ -d "$MODEL2OBS_PATH" ]; then
     echo "Removing model2obs..."
     cd "$BASK_PATH"
-    git submodule deinit -f "$(rel "$MODEL2OBS_PATH")" 2>/dev/null || true
-    git rm -rf --cached "$(rel "$MODEL2OBS_PATH")" 2>/dev/null || true
+    git submodule deinit -f "$MODEL2OBS_PATH" 2>/dev/null || true
+    git rm -f "$MODEL2OBS_PATH" 2>/dev/null || true
     rm -rf "$MODEL2OBS_PATH"
     rm -rf ".git/modules/$(rel "$MODEL2OBS_PATH")" 2>/dev/null || true
     git config -f .gitmodules --remove-section "submodule.$(rel "$MODEL2OBS_PATH")" 2>/dev/null || true
@@ -34,11 +34,11 @@ if [[ "$INSTALL_MODEL2OBS" -eq 1 ]]; then
 fi
 
 # CUPiD
-if [[ "$INSTALL_CUPID" -eq 1 ]]; then
+if [[ "$INSTALL_CUPID" -eq 1 ]] && [ -d "$CUPID_PATH" ]; then
     echo "Removing CUPiD..."
     cd "$BASK_PATH"
-    git submodule deinit -f "$(rel "$CUPID_PATH")" 2>/dev/null || true
-    git rm -rf --cached "$(rel "$CUPID_PATH")" 2>/dev/null || true
+    git submodule deinit -f "$CUPID_PATH" 2>/dev/null || true
+    git rm -f "$CUPID_PATH" 2>/dev/null || true
     rm -rf "$CUPID_PATH"
     rm -rf ".git/modules/$(rel "$CUPID_PATH")" 2>/dev/null || true
     git config -f .gitmodules --remove-section "submodule.$(rel "$CUPID_PATH")" 2>/dev/null || true
@@ -46,11 +46,11 @@ if [[ "$INSTALL_CUPID" -eq 1 ]]; then
 fi
 
 # CESM
-if [[ "$INSTALL_CESM" -eq 1 ]]; then
+if [[ "$INSTALL_CESM" -eq 1 ]] && [ -d "$CESM_PATH" ]; then
     echo "Removing CESM..."
     cd "$BASK_PATH"
-    git submodule deinit -f "$(rel "$CESM_PATH")" 2>/dev/null || true
-    git rm -rf --cached "$(rel "$CESM_PATH")" 2>/dev/null || true
+    git submodule deinit -f "$CESM_PATH" 2>/dev/null || true
+    git rm -f "$CESM_PATH" 2>/dev/null || true
     rm -rf "$CESM_PATH"
     rm -rf ".git/modules/$(rel "$CESM_PATH")" 2>/dev/null || true
     git config -f .gitmodules --remove-section "submodule.$(rel "$CESM_PATH")" 2>/dev/null || true
