@@ -10,7 +10,7 @@ Usage: ./install.sh [OPTIONS]
 
 Package Selection:
   --cesm            Install CESM model
-  --crococamp       Install CrocoCamp diagnostics tools
+  --model2obs       Install model2obs diagnostics tools
   --crocodash       Install CrocoDash model components
   --cupid           Install CUPiD diagnostics framework
   --dart            Install DART data assimilation system
@@ -23,7 +23,7 @@ Installation Options:
   -h, --help        Display this help message
 
 Examples:
-  ./install.sh --crocodash --crococamp -d
+  ./install.sh --crocodash --model2obs -d
   ./install.sh --all --default
   ./install.sh --cesm -d -f
   ./install.sh --crocodash --cupid -d -s
@@ -64,14 +64,14 @@ if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
     echo "CrocoDash environment installed."
 fi
 
-# CrocoCamp
-if [[ "$INSTALL_CROCOCAMP" -eq 1 ]]; then
-    echo "Installing CrocoCamp environment..."
-    cd "$CROCOCAMP_PATH"/install
+# model2obs
+if [[ "$INSTALL_MODEL2OBS" -eq 1 ]]; then
+    echo "Installing model2obs environment..."
+    cd "$MODEL2OBS_PATH"/install
     cp envpaths.sh.template envpaths.sh
-    DART_ROOT_PATH=${DART_PATH} CONDA_ENV_NAME="bask-crococamp" ./install.sh
+    DART_ROOT_PATH=${DART_PATH} CONDA_ENV_NAME="bask-model2obs" ./install.sh
     cd "$BASK_PATH"
-    echo "CrocoCamp environment installed."
+    echo "model2obs environment installed."
 fi
 
 # CUPiD
