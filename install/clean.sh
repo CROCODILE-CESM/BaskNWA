@@ -7,7 +7,7 @@ source ./envpaths.sh
 echo "Cleaning selected components..."
 
 # CrocoDash
-if [[ "$INSTALL_CROCODASH" -eq 1 ]] && [ -d "$CROCODASH_PATH" ]; then
+if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
     echo "Removing CrocoDash..."
     cd "$BASK_PATH"
     git submodule deinit -f "$CROCODASH_PATH" 2>/dev/null || true
@@ -19,7 +19,7 @@ if [[ "$INSTALL_CROCODASH" -eq 1 ]] && [ -d "$CROCODASH_PATH" ]; then
 fi
 
 # model2obs
-if [[ "$INSTALL_MODEL2OBS" -eq 1 ]] && [ -d "$MODEL2OBS_PATH" ]; then
+if [[ "$INSTALL_MODEL2OBS" -eq 1 ]]; then
     echo "Removing model2obs..."
     cd "$BASK_PATH"
     git submodule deinit -f "$MODEL2OBS_PATH" 2>/dev/null || true
@@ -31,7 +31,7 @@ if [[ "$INSTALL_MODEL2OBS" -eq 1 ]] && [ -d "$MODEL2OBS_PATH" ]; then
 fi
 
 # CUPiD
-if [[ "$INSTALL_CUPID" -eq 1 ]] && [ -d "$CUPID_PATH" ]; then
+if [[ "$INSTALL_CUPID" -eq 1 ]]; then
     echo "Removing CUPiD..."
     cd "$BASK_PATH"
     git submodule deinit -f "$CUPID_PATH" 2>/dev/null || true
@@ -43,7 +43,7 @@ if [[ "$INSTALL_CUPID" -eq 1 ]] && [ -d "$CUPID_PATH" ]; then
 fi
 
 # CESM
-if [[ "$INSTALL_CESM" -eq 1 ]] && [ -d "$CESM_PATH" ]; then
+if [[ "$INSTALL_CESM" -eq 1 ]]; then
     echo "Removing CESM..."
     cd "$BASK_PATH"
     git submodule deinit -f "$CESM_PATH" 2>/dev/null || true
