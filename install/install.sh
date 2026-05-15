@@ -38,6 +38,7 @@ EOF
 done
 
 # generate environmental variables
+INSTALL_DIR="$PWD"
 ./generate_envpaths.sh "$@" # pass all flags
 
 # clean already installed submodules
@@ -70,7 +71,7 @@ if [[ "$INSTALL_MODEL2OBS" -eq 1 ]]; then
     cd "$MODEL2OBS_PATH"/install
     cp envpaths.sh.template envpaths.sh
     DART_ROOT_PATH=${DART_PATH} CONDA_ENV_NAME="bask-model2obs" ./install.sh
-    cd "$BASK_PATH"
+    cd "$INSTALL_DIR"
     echo "model2obs environment installed."
 fi
 
@@ -96,5 +97,6 @@ if [[ "$INSTALL_CESM" -eq 1 ]]; then
     echo "Installing CESM..."
     cd "$CESM_PATH"
     ./bin/git-fleximod update --path "$CESM_PATH"
+    cd "$INSTALL_DIR"
     echo "CESM installed."
 fi
