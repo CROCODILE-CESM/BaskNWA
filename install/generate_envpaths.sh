@@ -8,7 +8,7 @@ export BASK_PATH="$(realpath -m "$(dirname "$PWD")")"
 # Array of package names and their relative default paths
 declare -A PKG_PATHS=(
     [CESM]="model/CESM"
-    [CROCOCAMP]="diagnostics/CrocoCamp"
+    [MODEL2OBS]="diagnostics/model2obs"
     [CROCODASH]="model/CrocoDash"
     [CUPID]="diagnostics/CUPiD"
     [DART]="data_assimilation/DART"
