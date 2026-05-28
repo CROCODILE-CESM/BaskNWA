@@ -27,7 +27,6 @@ if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
         git submodule add "$CROCODASH_GITHUB" "$CROCODASH_PATH"
         cd "$CROCODASH_PATH"
         git fetch --tags
-        git checkout v0.1.0-beta
         cd "$BASK_PATH"
         cd "$CROCODASH_PATH"
         git submodule update --init --recursive
@@ -45,7 +44,6 @@ if [[ "$INSTALL_MODEL2OBS" -eq 1 ]]; then
         git submodule add "$MODEL2OBS_GITHUB" "$MODEL2OBS_PATH"
         cd "$MODEL2OBS_PATH"
         git fetch --tags
-        git checkout 4b785f3
         cd "$BASK_PATH"
         echo "model2obs downloaded."
     fi
@@ -77,7 +75,7 @@ if [[ "$INSTALL_CESM" -eq 1 ]]; then
         echo "CESM already exists at $CESM_PATH. Use -f or --force to reinstall."
     else
         echo "Downloading CESM..."
-        git submodule add -b workshop_2025 "$CESM_GITHUB" "$CESM_PATH"
+        git submodule add -b full_regional_cesm "$CESM_GITHUB" "$CESM_PATH"
         cd "$CESM_PATH"
         git pull
         echo "CESM downloaded."
