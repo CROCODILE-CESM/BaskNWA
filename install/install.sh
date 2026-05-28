@@ -20,6 +20,7 @@ Installation Options:
   -d, --default     Use default paths for all packages (non-interactive)
   -f, --force       Remove and reinstall selected packages if they already exist
   -s, --ssh-github  Use SSH URLs instead of HTTPS for GitHub submodules (requires SSH key)
+  -e, --envname     Specify prefix for conda environment names (default: 'bask')
   -h, --help        Display this help message
 
 Examples:
@@ -59,7 +60,7 @@ source ./setup_conda_env.sh
 if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
     echo "Installing CrocoDash environment..."
     ENV_NAME=$(awk -F ": " '/^name:/ {print $2}' "$CROCODASH_PATH/environment.yml")
-    NEW_ENV_NAME="bask-${ENV_NAME}"
+    NEW_ENV_NAME="${ENV_PREFIX}-${ENV_NAME}"
     mamba env create -f "$CROCODASH_PATH"/environment.yml --name ${NEW_ENV_NAME} --yes
     add_env_vars_to_conda "$NEW_ENV_NAME"
     echo "CrocoDash environment installed."
@@ -70,7 +71,7 @@ if [[ "$INSTALL_MODEL2OBS" -eq 1 ]]; then
     echo "Installing model2obs environment..."
     cd "$MODEL2OBS_PATH"/install
     cp envpaths.sh.template envpaths.sh
-    DART_ROOT_PATH=${DART_PATH} CONDA_ENV_NAME="bask-model2obs" ./install.sh
+    DART_ROOT_PATH=${DART_PATH} CONDA_ENV_NAME="${ENV_PREFIX}-model2obs" ./install.sh
     cd "$INSTALL_DIR"
     echo "model2obs environment installed."
 fi
@@ -80,12 +81,12 @@ if [[ "$INSTALL_CUPID" -eq 1 ]]; then
     echo "Installing CUPiD environments..."
 
     ENV_NAME=$(awk -F ": " '/^name:/ {print $2}' "$CUPID_PATH"/environments/cupid-infrastructure.yml)
-    NEW_ENV_NAME="bask-${ENV_NAME}"
+    NEW_ENV_NAME="${ENV_PREFIX}-${ENV_NAME}"
     mamba env create -f "$CUPID_PATH"/environments/cupid-infrastructure.yml --name ${NEW_ENV_NAME} --yes
     add_env_vars_to_conda "$NEW_ENV_NAME"
 
     ENV_NAME=$(awk -F ": " '/^name:/ {print $2}' "$CUPID_PATH"/environments/cupid-analysis.yml)
-    NEW_ENV_NAME="bask-${ENV_NAME}"
+    NEW_ENV_NAME="${ENV_PREFIX}-${ENV_NAME}"
     mamba env create -f "$CUPID_PATH"/environments/cupid-analysis.yml --name ${NEW_ENV_NAME} --yes
     add_env_vars_to_conda "$NEW_ENV_NAME"
 

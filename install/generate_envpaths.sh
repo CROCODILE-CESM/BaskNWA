@@ -22,25 +22,33 @@ done
 DEFAULT=0
 FORCE=0
 SSH_GITHUB=0
+ENV_PREFIX='bask'
 
 # Register what packages need to be installed from CLI flags
-for arg in "$@"; do
-    upper="${arg#--}"
-    upper="${upper^^}"
-    if [[ -v PKG_PATHS[$upper] ]]; then
-        declare "${upper}=1"
-    else
-        case "$arg" in
-            --all)
-                for PKG in "${!PKG_PATHS[@]}"; do
-                    declare "${PKG}=1"
-                done
-                ;;
-            -d|--default) DEFAULT=1 ;;
-            -f|--force) FORCE=1 ;;
-            -s|--ssh-github) SSH_GITHUB=1 ;;
-        esac
-    fi
+for ((i=1; i<=$#; i++)); do
+    arg="${!i}"
+
+    case "$arg" in
+        --envname|-e)
+            ((i++))
+            ENV_PREFIX="${!i}"
+            ;;
+        --all)
+            for PKG in "${!PKG_PATHS[@]}"; do
+                declare "${PKG}=1"
+            done
+            ;;
+        -d|--default) DEFAULT=1 ;;
+        -f|--force) FORCE=1 ;;
+        -s|--ssh-github) SSH_GITHUB=1 ;;
+        *)
+            upper="${arg#--}"
+            upper="${upper^^}"
+            if [[ -v PKG_PATHS[$upper] ]]; then
+                declare "${upper}=1"
+            fi
+            ;;
+    esac
 done
 
 # Assign paths
@@ -80,3 +88,4 @@ for PKG in "${!PKG_PATHS[@]}"; do
 done
 echo "export FORCE=\"$FORCE\"" >> "$ENV_FILE"
 echo "export SSH_GITHUB=\"$SSH_GITHUB\"" >> "$ENV_FILE"
+echo "export ENV_PREFIX=\"$ENV_PREFIX\"" >> "$ENV_FILE"
