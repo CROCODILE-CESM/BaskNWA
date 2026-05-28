@@ -29,6 +29,8 @@ cd install
 - `-d, --default`: Use default paths for all packages (non-interactive)
 - `-f, --force`: Remove and reinstall selected packages if they already exist
 - `-s, --ssh-github`: Use SSH URLs instead of HTTPS for GitHub submodules (requires SSH key setup)
+-  `-e, --envname`: Specify prefix for conda environment names (default: 'bask', e.g. CrocoDash environment will be bask-CrocoDash)
+
 
 You can combine multiple flags. If no `-d` or `--default` flag is provided, the script will prompt for custom paths for each package.
 
@@ -40,6 +42,9 @@ You can combine multiple flags. If no `-d` or `--default` flag is provided, the 
 
 # Install all packages with default paths
 ./install.sh --all --default
+
+# Install all packages with default paths and custom environment prefix
+./install.sh --all --default --envname myBask
 
 # Reinstall CESM (force reinstall if already exists)
 ./install.sh --cesm -d -f
