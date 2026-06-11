@@ -7,12 +7,12 @@ source ./envpaths.sh
 # Set GitHub URLs based on SSH_GITHUB flag
 if [[ "$SSH_GITHUB" -eq 1 ]]; then
     CROCODASH_GITHUB="git@github.com:CROCODILE-CESM/CrocoDash.git"
-    CROCOCAMP_GITHUB="git@github.com:CROCODILE-CESM/CrocoCamp.git"
+    MODEL2OBS_GITHUB="git@github.com:CROCODILE-CESM/model2obs.git"
     CUPID_GITHUB="git@github.com:NCAR/CUPiD.git"
     CESM_GITHUB="git@github.com:CROCODILE-CESM/CESM"
 else
     CROCODASH_GITHUB="https://github.com/CROCODILE-CESM/CrocoDash.git"
-    CROCOCAMP_GITHUB="https://github.com/CROCODILE-CESM/CrocoCamp.git"
+    MODEL2OBS_GITHUB="https://github.com/CROCODILE-CESM/model2obs.git"
     CUPID_GITHUB="https://github.com/NCAR/CUPiD.git"
     CESM_GITHUB="https://github.com/CROCODILE-CESM/CESM"
 fi
@@ -35,19 +35,19 @@ if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
         echo "CrocoDash downloaded."
     fi
 fi
-#### CrocoCamp
+#### model2obs
 
-if [[ "$INSTALL_CROCOCAMP" -eq 1 ]]; then
-    if [ -d "$CROCOCAMP_PATH" ]; then
-        echo "CrocoCamp already exists at $CROCOCAMP_PATH. Use -f or --force to reinstall."
+if [[ "$INSTALL_MODEL2OBS" -eq 1 ]]; then
+    if [ -d "$MODEL2OBS_PATH" ]; then
+        echo "model2obs already exists at $MODEL2OBS_PATH. Use -f or --force to reinstall."
     else
-        echo "Downloading CrocoCamp..."
-        git submodule add "$CROCOCAMP_GITHUB" "$CROCOCAMP_PATH"
-        cd "$CROCOCAMP_PATH"
+        echo "Downloading model2obs..."
+        git submodule add "$MODEL2OBS_GITHUB" "$MODEL2OBS_PATH"
+        cd "$MODEL2OBS_PATH"
         git fetch --tags
         git checkout 4b785f3
         cd "$BASK_PATH"
-        echo "CrocoCamp downloaded."
+        echo "model2obs downloaded."
     fi
 fi
 
@@ -80,7 +80,6 @@ if [[ "$INSTALL_CESM" -eq 1 ]]; then
         git submodule add -b workshop_2025 "$CESM_GITHUB" "$CESM_PATH"
         cd "$CESM_PATH"
         git pull
-        git submodule update --init
         echo "CESM downloaded."
     fi
 fi

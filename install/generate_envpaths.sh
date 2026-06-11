@@ -8,7 +8,7 @@ export BASK_PATH="$(realpath -m "$(dirname "$PWD")")"
 # Array of package names and their relative default paths
 declare -A PKG_PATHS=(
     [CESM]="model/CESM"
-    [CROCOCAMP]="diagnostics/CrocoCamp"
+    [MODEL2OBS]="diagnostics/model2obs"
     [CROCODASH]="model/CrocoDash"
     [CUPID]="diagnostics/CUPiD"
     [DART]="data_assimilation/DART"
@@ -22,15 +22,17 @@ done
 DEFAULT=0
 FORCE=0
 SSH_GITHUB=0
+ENV_PREFIX='bask'
 
 # Register what packages need to be installed from CLI flags
-for arg in "$@"; do
+for ((i=1; i<=$#; i++)); do
+    arg="${!i}"
+
     case "$arg" in
-        --cesm) CESM=1 ;;
-        --crococamp) CROCOCAMP=1 ;;
-        --crocodash) CROCODASH=1 ;;
-        --cupid) CUPID=1 ;;
-        --dart) DART=1 ;;
+        --envname|-e)
+            ((i++))
+            ENV_PREFIX="${!i}"
+            ;;
         --all)
             for PKG in "${!PKG_PATHS[@]}"; do
                 declare "${PKG}=1"
@@ -39,6 +41,13 @@ for arg in "$@"; do
         -d|--default) DEFAULT=1 ;;
         -f|--force) FORCE=1 ;;
         -s|--ssh-github) SSH_GITHUB=1 ;;
+        *)
+            upper="${arg#--}"
+            upper="${upper^^}"
+            if [[ -v PKG_PATHS[$upper] ]]; then
+                declare "${upper}=1"
+            fi
+            ;;
     esac
 done
 
@@ -79,3 +88,4 @@ for PKG in "${!PKG_PATHS[@]}"; do
 done
 echo "export FORCE=\"$FORCE\"" >> "$ENV_FILE"
 echo "export SSH_GITHUB=\"$SSH_GITHUB\"" >> "$ENV_FILE"
+echo "export ENV_PREFIX=\"$ENV_PREFIX\"" >> "$ENV_FILE"

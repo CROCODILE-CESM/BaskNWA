@@ -19,7 +19,7 @@ cd install
 
 #### Package Selection
 - `--crocodash`: Install CrocoDash model components
-- `--crococamp`: Install CrocoCamp diagnostics tools
+- `--model2obs`: Install model2obs diagnostics tools
 - `--cupid`: Install CUPiD diagnostics framework
 - `--cesm`: Install CESM model
 - `--dart`: Install DART data assimilation system
@@ -29,17 +29,22 @@ cd install
 - `-d, --default`: Use default paths for all packages (non-interactive)
 - `-f, --force`: Remove and reinstall selected packages if they already exist
 - `-s, --ssh-github`: Use SSH URLs instead of HTTPS for GitHub submodules (requires SSH key setup)
+-  `-e, --envname`: Specify prefix for conda environment names (default: 'bask', e.g. CrocoDash environment will be bask-CrocoDash)
+
 
 You can combine multiple flags. If no `-d` or `--default` flag is provided, the script will prompt for custom paths for each package.
 
 ### Examples
 
 ```bash
-# Install CrocoDash and CrocoCamp with default paths
-./install.sh --crocodash --crococamp -d
+# Install CrocoDash and model2obs with default paths
+./install.sh --crocodash --model2obs -d
 
 # Install all packages with default paths
 ./install.sh --all --default
+
+# Install all packages with default paths and custom environment prefix
+./install.sh --all --default --envname myBask
 
 # Reinstall CESM (force reinstall if already exists)
 ./install.sh --cesm -d -f
@@ -55,7 +60,7 @@ If a package already exists at the target path, the script will skip installatio
 ## Subpackages
 
 - **CrocoDash**: CESM-MOM6 regional cases set up management
-- **CrocoCamp**: Diagnostics and analysis tools for MOM6 (and soon ROMS) model output
+- **model2obs**: Diagnostics and analysis tools for MOM6 (and soon ROMS) model output
 - **CUPiD**: NCAR's unified framework for running analysis and diagnostics on climate model output
 - **CESM**: Community Earth System Model for climate simulations
 - **DART**: Data Assimilation Research Testbed for ensemble data assimilation

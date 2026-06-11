@@ -18,16 +18,16 @@ if [[ "$INSTALL_CROCODASH" -eq 1 ]] && [ -d "$CROCODASH_PATH" ]; then
     echo "CrocoDash removed."
 fi
 
-# CrocoCamp
-if [[ "$INSTALL_CROCOCAMP" -eq 1 ]] && [ -d "$CROCOCAMP_PATH" ]; then
-    echo "Removing CrocoCamp..."
+# model2obs
+if [[ "$INSTALL_MODEL2OBS" -eq 1 ]] && [ -d "$MODEL2OBS_PATH" ]; then
+    echo "Removing model2obs..."
     cd "$BASK_PATH"
-    git submodule deinit -f "$CROCOCAMP_PATH" 2>/dev/null || true
-    git rm -f "$CROCOCAMP_PATH" 2>/dev/null || true
-    rm -rf "$CROCOCAMP_PATH"
-    rm -rf ".git/modules/$CROCOCAMP_PATH" 2>/dev/null || true
-    git config -f .gitmodules --remove-section "submodule.$CROCOCAMP_PATH" 2>/dev/null || true
-    echo "CrocoCamp removed."
+    git submodule deinit -f "$MODEL2OBS_PATH" 2>/dev/null || true
+    git rm -f "$MODEL2OBS_PATH" 2>/dev/null || true
+    rm -rf "$MODEL2OBS_PATH"
+    rm -rf ".git/modules/$MODEL2OBS_PATH" 2>/dev/null || true
+    git config -f .gitmodules --remove-section "submodule.$MODEL2OBS_PATH" 2>/dev/null || true
+    echo "model2obs removed."
 fi
 
 # CUPiD
