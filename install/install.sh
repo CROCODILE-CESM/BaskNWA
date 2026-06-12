@@ -56,6 +56,8 @@ fi
 # Source helper function
 source ./setup_conda_env.sh
 
+NBS_PATH=$BASK_PATH"/notebooks/"
+mkdir -p $NBS_PATH
 # CrocoDash
 if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
     echo "Installing CrocoDash environment..."
@@ -64,6 +66,7 @@ if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
     mamba env create -f "$CROCODASH_PATH"/environment.yml --name ${CROCODASH_ENV_NAME} --yes
     add_env_vars_to_conda "$CROCODASH_ENV_NAME"
     echo "CrocoDash environment installed."
+    cp "$CROCODASH_PATH"/demos/gallery/notebooks/CrocoDash/tutorials/crocodash_tutorial.ipynb "$NBS_PATH"
 fi
 
 # model2obs
@@ -75,6 +78,8 @@ if [[ "$INSTALL_MODEL2OBS" -eq 1 ]]; then
     DART_ROOT_PATH=${DART_PATH} CONDA_ENV_NAME=${MODEL2OBS_ENV_NAME} ./install.sh
     cd "$INSTALL_DIR"
     echo "model2obs environment installed."
+    cp "$MODEL2OBS_PATH"/tutorials/tutorial1_MOM6-CL-comparison.ipynb "$NBS_PATH"
+    cp "$MODEL2OBS_PATH"/tutorials/config_tutorial_1.yaml "$NBS_PATH"
 fi
 
 # CUPiD
