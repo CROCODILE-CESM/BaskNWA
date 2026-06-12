@@ -108,23 +108,41 @@ echo "------------------------------------------------------------------"
 echo "Install complete."
 echo "Components, environments and paths installed:"
 
+DATETIME=$(date "+%Y-%m-%d_%H-%M-%S")
+INSTALL_RECORD="installed_${DATETIME}.txt"
+touch $INSTALL_RECORD
+
 if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
-    echo "CrocoDash:"
-    echo "  path: $CROCODASH_PATH"
-    echo "  conda environments: $CROCODASH_ENV_NAME"
+    cat <<EOF | tee -a $INSTALL_RECORD
+CrocoDash:
+    path: $CROCODASH_PATH
+    conda environments: $CROCODASH_ENV_NAME
+EOF
 fi
 if [[ "$INSTALL_CESM" -eq 1 ]]; then
-    echo "CESM:"
-    echo "  path: $CESM_PATH"
+    cat <<EOF | tee -a $INSTALL_RECORD
+CESM:
+    path: $CESM_PATH
+EOF
 fi
 if [[ "$INSTALL_MODEL2OBS" -eq 1 ]]; then
-    echo "MODEL2OBS:"
-    echo "  path: $MODEL2OBS_PATH"
-    echo "  conda environment: $MODEL2OBS_ENV_NAME"
+    cat <<EOF | tee -a $INSTALL_RECORD
+MODEL2OBS:
+    path: $MODEL2OBS_PATH
+    conda environment: $MODEL2OBS_ENV_NAME
+EOF
 fi
 if [[ "$INSTALL_CUPID" -eq 1 ]]; then
-    echo "CUPiD:"
-    echo "  path: $CUPID_PATH"
-    echo "  conda environments: $CUPID_ENV1_NAME"
-    echo "                      $CUPID_ENV2_NAME"
+    cat <<EOF | tee -a $INSTALL_RECORD
+CUPiD:
+    path: $CUPID_PATH
+    conda environments: $CUPID_ENV1_NAME
+                        $CUPID_ENV2_NAME
+EOF
 fi
+
+echo "To activate a bask environment:"
+echo "conda activate <environment-name>"
+echo ""
+echo "Example:"
+echo "conda activate bask-CrocoDash"
