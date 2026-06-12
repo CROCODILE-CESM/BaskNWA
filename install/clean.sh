@@ -35,35 +35,18 @@ EOF
 fi
 
 # If no arguments provided, use envpaths.sh (preserves original behavior when called from install.sh)
+PKGS=(CESM MODEL2OBS CROCODASH CUPID DART)
 source ./envpaths.sh
-declare -A PKG_PATHS=(
-    [CESM]="model/CESM"
-    [MODEL2OBS]="diagnostics/model2obs"
-    [CROCODASH]="model/CrocoDash"
-    [CUPID]="diagnostics/CUPiD"
-    [DART]="data_assimilation/DART"
-)
 
 if [[ $# -eq 0 ]]; then
     # Export CLEAN_* variables
-    for PKG in "${!PKG_PATHS[@]}"; do
+    for PKG in "${PKGS[@]}"; do
         export "CLEAN_${PKG}"="$(eval echo \${INSTALL_${PKG}})"
     done
 else
-    # Parse CLI arguments for package selection
-    BASK_PATH="$(realpath -m "$(dirname "$PWD")")"
-    
-    declare -A PKG_PATHS=(
-        [CESM]="model/CESM"
-        [MODEL2OBS]="diagnostics/model2obs"
-        [CROCODASH]="model/CrocoDash"
-        [CUPID]="diagnostics/CUPiD"
-        [DART]="data_assimilation/DART"
-    )
-    
     # Initialize all packages to 0
-    for PKG in "${!PKG_PATHS[@]}"; do
-        declare "${PKG}=0"
+    for PKG in "${PKGS[@]}"; do
+        export "CLEAN_${PKG}=0"
     done
     
     # Parse arguments
@@ -72,30 +55,28 @@ else
         
         case "$arg" in
             --all)
-                for PKG in "${!PKG_PATHS[@]}"; do
-                    declare "${PKG}=1"
+                for PKG in "${PKGS[@]}"; do
+                    export "CLEAN_${PKG}=1"
                 done
                 ;;
             *)
                 upper="${arg#--}"
                 upper="${upper^^}"
-                if [[ -v PKG_PATHS[$upper] ]]; then
-                    declare "${upper}=1"
-                fi
+                for PKG in "${PKGS[@]}"; do
+                    if [[ "$PKG" == "$upper" ]]; then
+                        export "CLEAN_${upper}=1"
+                        break
+                    fi
+                done
                 ;;
         esac
-    done
-    
-    # Export CLEAN_* variables
-    for PKG in "${!PKG_PATHS[@]}"; do
-        export "CLEAN_${PKG}"="$(eval echo \${${PKG}})"
     done
 fi
 
 echo "Cleaning selected components..."
 
 # CrocoDash
-if [ "$CLEAN_CROCODASH" -eq 1 ] && [ -n "$CROCODASH_PATH" ]; then
+if [ "$CLEAN_CROCODASH" -eq 1 ] && [ -e "$CROCODASH_PATH" ]; then
     echo "Removing CrocoDash..."
     cd "$BASK_PATH"
     git submodule deinit -f "$CROCODASH_PATH" 2>/dev/null || true
@@ -103,6 +84,7 @@ if [ "$CLEAN_CROCODASH" -eq 1 ] && [ -n "$CROCODASH_PATH" ]; then
     rm -rf "$CROCODASH_PATH"
     rm -rf ".git/modules/$CROCODASH_PATH" 2>/dev/null || true
     git config -f .gitmodules --remove-section "submodule.$CROCODASH_PATH" 2>/dev/null || true
+    git add .gitmodules 2>/dev/null || true
     echo "CrocoDash removed."
 fi
 
@@ -115,6 +97,7 @@ if [ "$CLEAN_MODEL2OBS" -eq 1 ] && [ -n "$MODEL2OBS_PATH" ]; then
     rm -rf "$MODEL2OBS_PATH"
     rm -rf ".git/modules/$MODEL2OBS_PATH" 2>/dev/null || true
     git config -f .gitmodules --remove-section "submodule.$MODEL2OBS_PATH" 2>/dev/null || true
+    git add .gitmodules 2>/dev/null || true
     echo "model2obs removed."
 fi
 
@@ -127,6 +110,7 @@ if [ "$CLEAN_CUPID" -eq 1 ] && [ -n "$CUPID_PATH" ]; then
     rm -rf "$CUPID_PATH"
     rm -rf ".git/modules/$CUPID_PATH" 2>/dev/null || true
     git config -f .gitmodules --remove-section "submodule.$CUPID_PATH" 2>/dev/null || true
+    git add .gitmodules 2>/dev/null || true
     echo "CUPiD removed."
 fi
 
@@ -139,6 +123,7 @@ if [ "$CLEAN_CESM" -eq 1 ] && [ -n "$CESM_PATH" ]; then
     rm -rf "$CESM_PATH"
     rm -rf ".git/modules/$CESM_PATH" 2>/dev/null || true
     git config -f .gitmodules --remove-section "submodule.$CESM_PATH" 2>/dev/null || true
+    git add .gitmodules 2>/dev/null || true
     echo "CESM removed."
 fi
 
