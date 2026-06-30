@@ -1,0 +1,14 @@
+[submodule "/glade/work/emilanese/BaskNWA/model/CrocoDash"]
+	path = /glade/work/emilanese/BaskNWA/model/CrocoDash
+	url = https://github.com/CROCODILE-CESM/CrocoDash.git
+[submodule "/glade/work/emilanese/BaskNWA/diagnostics/CUPiD"]
+	path = /glade/work/emilanese/BaskNWA/diagnostics/CUPiD
+	url = https://github.com/NCAR/CUPiD.git
+[submodule "/glade/work/emilanese/BaskNWA/model/CESM"]
+	path = /glade/work/emilanese/BaskNWA/model/CESM
+	url = https://github.com/CROCODILE-CESM/CESM
+	branch = full_regional_cesm
+[submodule "/glade/work/emilanese/BaskNWA/diagnostics/model2obs"]
+	path = /glade/work/emilanese/BaskNWA/diagnostics/model2obs
+	url = https://github.com/CROCODILE-CESM/model2obs.git
+
