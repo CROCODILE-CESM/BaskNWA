@@ -32,7 +32,8 @@ import xarray as xr
 CFNS_INPUT = "create_fixed_network_seq.in"
 DART_OUTPUT_OBS_SEQ = "create_fixed_network_seq.out"
 COS_OUTPUT = "create_obs_sequence.out"
-
+COS_PATH = Path(COS_OUTPUT)
+DART_OUTPUT_OBS_SEQ_PATH = Path(DART_OUTPUT_OBS_SEQ)
 
 def first_15th_on_or_after(d: date) -> date:
     """Return the 15th of the first calendar month where the 15th >= d."""
@@ -96,6 +97,11 @@ def parse_args(argv=None):
         metavar="YYYY-MM-DD",
         help="Override the end date derived from the nc file (format: YYYY-MM-DD).",
     )
+    parser.add_argument(
+        "-M", "--multiple-files",
+        action="store_true",
+        help="Output one file per period instead of one file for the whole date range.",
+    )
 
     period_group = parser.add_mutually_exclusive_group(required=True)
     period_group.add_argument(
@@ -126,6 +132,38 @@ def parse_args(argv=None):
     )
 
     return parser.parse_args(argv)
+
+
+def write_out(
+        out_path,
+        create_obs_seq_out,
+        n_repl,
+        initial_dt,
+        period,
+        dart_obs_seq_out,
+        mode
+):
+    with open(out_path, "w") as f:
+        f.write(f"{create_obs_seq_out}\n")
+        f.write("1\n")   # option: regular repeating
+        f.write(f"{n_repl}\n")
+        f.write(
+            f"{initial_dt.year} {initial_dt.month} {initial_dt.day} "
+            f"{initial_dt.hour} {initial_dt.minute} {initial_dt.second}\n"
+        )
+        f.write(f"{period} 0\n")
+        f.write(f"{dart_obs_seq_out}\n")
+
+    start_date = pd.Timestamp(initial_dt).date()
+    n_days = period*n_repl - 1
+    end_date = pd.Timestamp(initial_dt+timedelta(days=n_days)).date()
+    print(
+        f"Period: {mode} ({period} day(s)) \n"
+        f"Dataset: {start_date} → {end_date} \n"
+        f"Initial obs: {initial_dt} \n"
+        f"Number of replicates: {n_repl} \n"
+        f"Written: {out_path}"
+    )
 
 
 def main(argv=None):
@@ -185,26 +223,46 @@ def main(argv=None):
             file=sys.stderr,
         )
         sys.exit(1)
-    n_obs = n_days // period_days + 1
+    n_repl = n_days // period_days + 1
 
-    with open(out_path, "w") as f:
-        f.write(f"{args.create_obs_seq_output}\n")
-        f.write("1\n")   # option: regular repeating
-        f.write(f"{n_obs}\n")
-        f.write(
-            f"{initial_dt.year} {initial_dt.month} {initial_dt.day} "
-            f"{initial_dt.hour} {initial_dt.minute} {initial_dt.second}\n"
+    if args.multiple_files:
+        for j in range (n_repl):
+            initial_dt_file = initial_dt + timedelta(days=period_days*j)
+            n_repl_file = 1
+            initial_dt_file_str =  initial_dt_file.strftime("%Y%m%d")
+            dart_obs_seq_out = DART_OUTPUT_OBS_SEQ_PATH.with_name(
+                f"{DART_OUTPUT_OBS_SEQ_PATH.stem}_" + initial_dt_file_str + ".out"
+            )
+            period_days_file = 1
+            out_path_file = out_path.with_name(f"{out_path.stem}_" + initial_dt_file_str + ".in")
+
+            write_out(
+                out_path_file,
+                args.create_obs_seq_output,
+                n_repl_file,
+                initial_dt_file,
+                period_days_file,
+                dart_obs_seq_out,
+                mode
+            )
+
+    else:
+        write_out(
+            out_path,
+            args.create_obs_seq_output,
+            n_repl,
+            initial_dt,
+            period_days,
+            DART_OUTPUT_OBS_SEQ,
+            mode
         )
-        f.write(f"{period_days} 0\n")
-        f.write(f"{DART_OUTPUT_OBS_SEQ}\n")
-
-    print(
-        f"Period: {mode} ({period_days} day(s)) \n"
-        f"Dataset: {start_date} → {end_date} \n"
-        f"Initial obs: {initial_dt} \n"
-        f"n_obs: {n_obs} \n"
-        f"Written: {out_path}"
-    )
+    # print(
+    #     f"Period: {mode} ({period_days} day(s)) \n"
+    #     f"Dataset: {start_date} → {end_date} \n"
+    #     f"Initial obs: {initial_dt} \n"
+    #     f"n_repl: {n_repl} \n"
+    #     f"Written: {out_path}"
+    # )
 
 
 if __name__ == "__main__":
