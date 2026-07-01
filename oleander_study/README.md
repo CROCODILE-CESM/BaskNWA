@@ -38,6 +38,118 @@ create_obs_sequence uses as input values read from standard input (i.e. interact
 Example:
 
 ``` sh
-python generate_create_obs_seq_file.py -i <file.nc> -t OBS_TYPE1 [OBS_TYPE2 ...]
+python generate_create_obs_seq_input_file.py -i oleander_grid.nc -t TEMPERATURE SALINITY
+
+Wrote 16160 observation definitions (2 type(s) × 80 lat × 101 depth) to: /glade/work/emilanese/BaskNWA/oleander_study/create_obs_sequence.in
+
 ```
 
+The first 20 lines of create_obs_sequence.in (annotated for explanation) are:
+
+``` text
+16160                       # total number of observations: number of obs types * number of grid points
+0                           # (placeholder) num_copies : number of values for each observation
+0                           # (placeholder) num_qc     : number of qc fields for each observation
+0                           # signals that observations defintions start in the next line
+TEMPERATURE                 # OBS_TYPE
+3                           # WHICH_VERT : vertical coordinate type (here: depth in meters)
+0.0                         # Value of vertical coordinate
+295.3363533                 # Longitude
+32.5                        # Latitude
+2010 1 1 0 0 0              # (placeholder) Datetime (year month day hour minute seconds)
+0.0                         # Error variance (not relevant for us)
+0                           # signals that another observation defintion starts in the next line
+TEMPERATURE                 # <--- SECOND OBSERVATION STARTS
+3
+10.0
+295.3363533
+32.5
+2010 1 1 0 0 0
+0.0                         # <--- SECOND OBSERVATION ENDS
+0                           # another observation definition will follow
+```
+
+Entries marked as 'placeholder' are not used in this current workflow where I just want to generate a grid in obs_sequence format.
+
+The last lines of the file contain the last observation definition and the name of the file that create_obs_sequence will generate:
+
+``` text
+SALINITY                    # <--- 16160-TH OBSERVATION STARTS
+3
+1000.0
+286.34999847
+40.4
+2010 1 1 0 0 0
+0.0                         # <--- 16160-TH OBSERVATION ENDS
+create_obs_sequence.out     # filename that create_obs_sequence will generate
+
+```
+
+Finally, I feed create_obs_sequence.in to create_obs_sequence, which formats the observations definitions into DART format. Note that create_obs_sequence requires DART's input.nml file, with the obs_kind_nml and model_nml sections properly specified.
+
+For my case, I copied the default input namelist file to my working directory and modified the two sections as follow:
+
+``` text
+&obs_kind_nml
+   assimilate_these_obs_types = 'SALINITY'
+                                'TEMPERATURE'
+                                'U_CURRENT_COMPONENT'
+                                'V_CURRENT_COMPONENT'
+   evaluate_these_obs_types   = ''
+   /
+
+&model_nml
+   assimilation_period_days     = 1
+   assimilation_period_seconds  = 0
+   template_file = 'mom6.r.nc', 
+   static_file = 'mom6.static.nc',
+   ocean_geometry = 'ocean_geometry.nc',
+   model_state_variables        = 'so ', 'QTY_SALINITY             ', 'NA', 'NA', 'UPDATE',
+                                  'thetao ', 'QTY_POTENTIAL_TEMPERATURE', 'NA', 'NA', 'UPDATE',
+                                  'uo    ', 'QTY_U_CURRENT_COMPONENT  ', 'NA', 'NA', 'UPDATE',
+                                  'vo    ', 'QTY_V_CURRENT_COMPONENT  ', 'NA', 'NA', 'UPDATE',
+   use_pseudo_depth           = .true.,
+   layer_name                 = "zb_l",
+   /
+```
+
+Make sure that you list the obs types that you need in obs_kind_nml, and that you list the corresponding MOM6 model state variables names and vertical layer name in model_nml. I kept the default names for the template, static and ocean geometry files, and generated symlinks in my working directory:
+
+``` sh
+lrwxrwxrwx  1 emilanese ncar      109 Jul  1 07:46 mom6.r.nc -> /glade/derecho/scratch/emilanese/archive/oleanderNWA12_2023/ocn/hist/oleanderNWA12_2023.mom6.h.ole.2023-01.nc
+lrwxrwxrwx  1 emilanese ncar      104 Jul  1 07:47 mom6.static.nc -> /glade/derecho/scratch/emilanese/archive/oleanderNWA12_2023/ocn/hist/oleanderNWA12_2023.mom6.h.static.nc
+lrwxrwxrwx  1 emilanese ncar      112 Jul  1 07:48 ocean_geometry.nc -> /glade/derecho/scratch/emilanese/archive/oleanderNWA12_2023/ocn/hist/oleanderNWA12_2023.mom6.h.ocean_geometry.nc
+
+```
+
+but you can modify the entries in input.nml f you prefer.
+
+Finally, we can feed create_obs_sequence.in into create_obs_sequence ($DART_ROOT_PATH is set by Bask if you are working inside the model2obs Bask environment)
+
+``` sh
+$DART_ROOT_PATH/models/MOM6/work/create_obs_sequence < create_obs_sequence.in
+```
+
+This is fast and it re-formatted my observations definitions into DART's format:
+
+``` sh
+head -n 17 create_obs_sequence.out 
+ obs_sequence
+obs_type_definitions
+           2
+           1 SALINITY                       
+           2 TEMPERATURE                    
+  num_copies:            0  num_qc:            0
+  num_obs:        16160  max_num_obs:        16160
+  first:            1  last:        16160
+ OBS            1
+          -1           2          -1
+obdef
+loc3d
+     5.154591765918220        0.5672320068981571         0.000000000000000      3
+kind
+           2
+     0     149384
+  0.000000000000000E+000
+
+```
