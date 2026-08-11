@@ -211,7 +211,7 @@ kind
 
 create_fixed_network_seq.out can be very large: in my case it's 1.2 GB (365 times create_obs_sequence.out which is 3.3 MB), so for this and other reasons you might need to generate it as multiple files.
 
-#### Step  5 - multiple obs_seq files 
+#### Step 5 - multiple obs_seq files 
 
 These are the reasons why I am going to generate multiple observation sequence files:
 
@@ -221,7 +221,7 @@ These are the reasons why I am going to generate multiple observation sequence f
 
 3) 1.2 GB is a large text file, and I prefer to work with many smaller files (I can generate them on my machine, it's faster to inspect them when errors appear, etc)
 
-To generate multiple files, we just pas the `-M` flag to the python script (and optionally the `-o` to store all the files in one subdirectory):
+To generate multiple files, we just pass the `-M` flag to the python script (and optionally the `-o` to store all the files in one subdirectory):
 ``` sh
 python generate_create_fixed_network_seq_input_file.py -d --start 2023-01-01 --end 2023-12-31 -M -o ./cfns_in
 ```
@@ -248,3 +248,48 @@ for f in ./cfns_in/*; do "$DART_ROOT_PATH/models/MOM6/work/create_fixed_network_
 2) on Casper we can sbatch a [job array](https://ncar-hpc-docs.readthedocs.io/en/latest/pbs/job-scripts/casper-job-script-examples/), see script parallel_generate_cfns_out.sh for an example on how to do it
 
 Option 1 is serial, but it took only ~7 minutes for a year of observations. Option 2 took 3 minutes.
+
+
+### Step 6
+
+To interpolate the output of my MOM6 run to the target grid, I use model2obs. To get started with model2obs look at its dedicated tutorial; here, the key is to set the `interpolate_only` parameter of the config file to true. This triggers the following behaviour:
+
+* model output is interpolated to the observation space (my target grid);
+* no model-observation comparison is performed (there is no observation value at my grid location);
+* the interpolated model output is stored to netCDF files at the specified folder.
+
+In my config file, the lines that differ from the model-obs comparison usage are:
+
+``` yaml
+interpolate_only: true
+netcdf_output_folder: "netcdf_output"  # destination folder
+```
+
+Calling and executing model2obs is then extremely coincise (see m2o_NWA2023_transect.py)
+
+``` python
+from model2obs.workflows import WorkflowModelObs
+
+# Create and run workflow to interpolate MOM6 model onto Oleander target grid
+workflow_crocolake = WorkflowModelObs.from_config_file('config_NWA12_2023_transect.yaml')
+workflow_crocolake.run(clear_output=True, parallel=True) #use flag clear_output=True if you want to re-run it and automatically clean all previous output
+```
+
+In my case it generated 365 netcdf files (one per day, which is the resolution we established and used in previous steps). For example, the data in model-obs-0018.nc looks like: 
+
+``` sh
+<xarray.Dataset> Size: 195kB
+Dimensions:                   (time: 1, depth: 101, latitude: 80)
+Coordinates:
+  * time                      (time) datetime64[ns] 8B 2023-01-19T12:00:00
+  * depth                     (depth) float32 404B 0.0 10.0 20.0 ... 990.0 1e+03
+  * latitude                  (latitude) float32 320B 32.5 32.6 ... 40.3 40.4
+    longitude                 (latitude) float32 320B ...
+Data variables:
+    interpolated_SALINITY     (time, depth, latitude) float32 32kB ...
+    qc_flag_SALINITY          (time, depth, latitude) float64 65kB ...
+    interpolated_TEMPERATURE  (time, depth, latitude) float32 32kB ...
+    qc_flag_TEMPERATURE       (time, depth, latitude) float64 65kB ...
+```
+
+Note the `interpolated_` prefix for the variables, that there is only one time value (the 19th day of the year), and that the data is on a vertical plane (longitude is a function of latitude)
