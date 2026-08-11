@@ -1,0 +1,20 @@
+name: NWA-oleander-climatology
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python==3.12
+  - bokeh>=3.1.0
+  - dask<=2025.9.1
+  - distributed
+  - h5netcdf
+  - netcdf4<=1.7.2
+  - statsmodels
+  - xarray<=2025.07
+  - ipykernel
+  - nb_conda_kernels
+  - matplotlib
+  - pip
+  - pip:
+      - git+ssh://git@github.com/boom-lab/oleanderClimatology.git@d2008d110356b95eee331c39d25e4925c350c49d      
