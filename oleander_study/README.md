@@ -293,3 +293,9 @@ Data variables:
 ```
 
 Note the `interpolated_` prefix for the variables, that there is only one time value (the 19th day of the year), and that the data is on a vertical plane (longitude is a function of latitude)
+
+### Steps 7-8
+
+Now that we have the model data at the desired coordinates, we can build a climatology. I will not go into the specifics of how to build one, as they depend on your needs and they are their own ~can of worms~ topic of research. For my case, I adapted the code I used to build the climatology from the observations (if you're curious it's [here](https://github.com/boom-lab/oleanderClimatology)).
+
+Once we have both model and observations climatologies on the same space, it is straightforward to compare them. The notebook <TO ADD> shows my use case.
